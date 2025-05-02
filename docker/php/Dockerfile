@@ -12,10 +12,10 @@ RUN apt-get update && apt-get install -y \
     libz-dev \
     libssl-dev \
     && pecl install redis \
-    && infrastructure-php-ext-enable redis \
-    && infrastructure-php-ext-install pdo pdo_pgsql \
+    && docker-php-ext-enable redis \
+    && docker-php-ext-install pdo pdo_pgsql \
     && pecl install mongodb-1.20.0 \
-    && infrastructure-php-ext-enable mongodb \
+    && docker-php-ext-enable mongodb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

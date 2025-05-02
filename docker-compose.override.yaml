@@ -1,0 +1,25 @@
+services:
+  nginx:
+    ports:
+      - "8000:80"
+
+  nextjs:
+    ports:
+      - "3000:3000"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  mongodb:
+    ports:
+      - "27017:27017"
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  maildev:
+    ports:
+      - "1080:1080"
+      - "1025:1025"
