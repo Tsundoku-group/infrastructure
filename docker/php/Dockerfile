@@ -14,23 +14,23 @@ RUN apt-get update && apt-get install -y \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-install pdo pdo_pgsql \
-    && pecl install mongodb \
+    && pecl install mongodb-1.20.0 \
     && docker-php-ext-enable mongodb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN nslookup raw.githubusercontent.com
+WORKDIR /var/www/backend
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-WORKDIR /var/www/html
 
 COPY . .
 
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
+RUN composer install
 
-RUN echo "*/5 * * * * www-data php /var/www/backend/bin/console app:flush-reactions >> /var/log/flush_reactions.log 2>&1" \
-    > /etc/cron.d/flush_reactions
+RUN chown -R www-data:www-data /var/www/backend \
+    && find /var/www/backend -type d -exec chmod 755 {} \; \
+    && find /var/www/backend -type f -exec chmod 644 {} \;
 
-RUN chmod 0644 /etc/cron.d/flush_reactions && crontab /etc/cron.d/flush_reactions
+CMD ["php-fpm"]
 
-CMD service cron start && php-fpm
+EXPOSE 9000
