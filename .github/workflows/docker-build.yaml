@@ -31,7 +31,7 @@ jobs:
       - name: Build & Push PHP Image
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/php/prod
+          context: ../backend
           file: ./docker/php/prod/Dockerfile
           push: true
           tags: |
@@ -42,7 +42,7 @@ jobs:
       - name: Build & Push Next.js Image
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/nextjs/prod
+          context: ../frontend
           file: ./docker/nextjs/prod/Dockerfile
           push: true
           tags: |
