@@ -23,7 +23,10 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader --classmap-authoritative
+RUN composer install --no-dev --no-scripts --optimize-autoloader --classmap-authoritative
+
+RUN php bin/console cache:clear --no-warmup --env=prod
+RUN php bin/console cache:warmup --env=prod
 
 RUN chown -R www-data:www-data /var/www/backend \
     && find /var/www/backend -type d -exec chmod 755 {} \; \

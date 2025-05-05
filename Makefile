@@ -1,113 +1,92 @@
-# Name of Docker Compose services
+# ========== CONFIG ==========
+ENV_FILE=./.env
 COMPOSE=docker compose
+COMPOSE_DEV_FILES=-f ./compose/dev/docker-compose.yaml -f ./compose/dev/docker-compose.override.yaml
+
 PHP_SERVICE=php
 NEXTJS_SERVICE=nextjs
 
-# Environment variables
-ENV_FILE=.env
-
-# Docker Compose commands
+# ========== DOCKER COMPOSE ==========
 build:
-	$(COMPOSE) build
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) build --no-cache
 
 start:
-	$(COMPOSE) start
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) start
 
 stop:
-	$(COMPOSE) stop
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) stop
 
 up:
-	docker compose -f ../infrastructure/docker-compose.yaml -f ../infrastructure/docker-compose.override.yaml up -d
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) up -d
 
 down:
-	$(COMPOSE) down
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) down
 
 restart:
-	$(COMPOSE) down up
+	$(MAKE) down
+	$(MAKE) up
 
 docker-ps:
-	$(COMPOSE) ps
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) ps
 
 images:
-	$(COMPOSE) images
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) images
 
 logs:
-	$(COMPOSE) logs -f
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) logs -f
 
-# Accessing containers
+# ========== ACCESS CONTAINERS ==========
 php-bash:
-	$(COMPOSE) exec $(PHP_SERVICE) bash
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) bash
 
 composer-bash:
-	$(COMPOSE) exec $(PHP_SERVICE) bash
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) bash
 
 nextjs-bash:
-	$(COMPOSE) exec -it $(NEXTJS_SERVICE) bash
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(NEXTJS_SERVICE) bash
 
-# Composer commands
+# ========== COMPOSER ==========
 composer-install:
-	$(COMPOSE) exec $(PHP_SERVICE) composer install
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) composer install
 
 composer-require:
-	$(COMPOSE) exec $(PHP_SERVICE) composer require $(package)
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) composer require $(package)
 
-# Symfony commands
+# ========== SYMFONY ==========
 make-entity:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console make:entity $(entity)
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console make:entity $(entity)
 
 make-migration:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console make:migration
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console make:migration
 
 migrate:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:migrations:migrate --no-interaction
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:migrations:migrate --no-interaction
 
 cache-clear:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console cache:clear
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console cache:clear
 
 debug-router:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console debug:router
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console debug:router
 
-# Doctrine commands
+# ========== DOCTRINE ==========
 create-database:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:database:create --if-not-exists
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:database:create --if-not-exists
 
 drop-database:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:database:drop --force
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:database:drop --force
 
 create-schema:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:schema:create
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:schema:create
 
 update-schema:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:schema:update --force
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:schema:update --force
 
 validate-schema:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:schema:validate
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:schema:validate
 
 fixtures:
-	$(COMPOSE) exec $(PHP_SERVICE) php bin/console doctrine:fixtures:load --no-interaction
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:fixtures:load --no-interaction
 
-# Use:
-# make build - build containers
-# make start - start containers
-# make stop - stop containers
-# make up - start containers
-# make down - stop containers
-# make restart - restart containers
-# make ps - show state of containers
-# make images - show list of images
-# make logs - display container logs
-# make php-sh - access the PHP container shell
-# make composer-sh - access the Composer container shell
-# make composer-install - install Composer dependencies
-# make composer-require package=vendor/package - add a Composer package
-# make make-entity entity=User - create a Symfony entity
-# make make-migration - create a migration
-# make migrate - execute migrations
-# make cache-clear - empty the Symfony cache
-# make debug-router - list all Symfony routes
-# make create-database - create the database
-# make drop-database - drop the database
-# make create-schema - create the database schema
-# make update-schema - update the database schema
-# make validate-schema - validate the database schema
-# make fixtures - load fixtures into the database
+# ========== NEXTJS ==========
+npm-install:
+	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(NEXTJS_SERVICE) npm install

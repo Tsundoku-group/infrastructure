@@ -9,7 +9,7 @@ services:
     image: tsundoku/nginx:latest
     container_name: nginx-prod
     volumes:
-      - ./docker/nginx/prod/config.conf:/etc/nginx/conf.d/default.conf
+      - ../../docker/nginx/prod/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
       - nextjs
@@ -21,7 +21,7 @@ services:
   php:
     build:
       context: ../../../backend
-      dockerfile: ../../docker/php/prod/Dockerfile
+      dockerfile: ../infrastructure/docker/php/prod/Dockerfile
     image: tsundoku/php:prod
     container_name: php-prod
     environment:
@@ -36,7 +36,7 @@ services:
   nextjs:
     build:
       context: ../../../frontend
-      dockerfile: ../../docker/nextjs/prod/Dockerfile
+      dockerfile: ../infrastructure/docker/nextjs/prod/Dockerfile
     image: tsundoku/nextjs:prod
     container_name: nextjs-prod
     environment:
