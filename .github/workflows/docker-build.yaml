@@ -1,0 +1,62 @@
+name: Build & Push Docker Images
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_PREFIX: ghcr.io/tsundoku-group
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set image tag date
+        run: echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push PHP Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker/php/prod
+          file: ./docker/php/prod/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/php:prod
+            ${{ env.IMAGE_PREFIX }}/php:${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/php:${{ env.DATE_TAG }}
+
+      - name: Build & Push Next.js Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker/nextjs/prod
+          file: ./docker/nextjs/prod/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/nextjs:prod
+            ${{ env.IMAGE_PREFIX }}/nextjs:${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/nextjs:${{ env.DATE_TAG }}
+
+      - name: Build & Push Nginx Image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./docker/nginx/prod
+          file: ./docker/nginx/prod/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}/nginx:prod
+            ${{ env.IMAGE_PREFIX }}/nginx:${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/nginx:${{ env.DATE_TAG }}
