@@ -59,6 +59,7 @@ jobs:
           context: ./frontend
           file: ./docker/nextjs/prod/Dockerfile
           push: true
+          platforms: linux/amd64
           tags: |
             ${{ env.IMAGE_PREFIX }}/nextjs:prod
             ${{ env.IMAGE_PREFIX }}/nextjs:${{ github.sha }}
