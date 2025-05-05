@@ -26,9 +26,6 @@ COPY . .
 
 RUN composer install --no-dev --no-scripts --optimize-autoloader --classmap-authoritative
 
-RUN DATABASE_URL="sqlite:///:memory:" php bin/console cache:clear --no-warmup --env=prod
-RUN DATABASE_URL="sqlite:///:memory:" php bin/console cache:warmup --env=prod
-
 RUN chown -R www-data:www-data /var/www/backend \
     && find /var/www/backend -type d -exec chmod 755 {} \; \
     && find /var/www/backend -type f -exec chmod 644 {} \;
