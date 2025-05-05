@@ -15,8 +15,22 @@ jobs:
       IMAGE_PREFIX: ghcr.io/tsundoku-group
 
     steps:
-      - name: Checkout repository
+      - name: Checkout infrastructure
         uses: actions/checkout@v3
+
+      - name: Checkout backend
+        uses: actions/checkout@v3
+        with:
+          repository: tsundoku-group/backend
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: backend
+
+      - name: Checkout frontend
+        uses: actions/checkout@v3
+        with:
+          repository: tsundoku-group/frontend
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: frontend
 
       - name: Set image tag date
         run: echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
@@ -31,7 +45,7 @@ jobs:
       - name: Build & Push PHP Image
         uses: docker/build-push-action@v5
         with:
-          context: ../backend
+          context: ./backend
           file: ./docker/php/prod/Dockerfile
           push: true
           tags: |
@@ -42,7 +56,7 @@ jobs:
       - name: Build & Push Next.js Image
         uses: docker/build-push-action@v5
         with:
-          context: ../frontend
+          context: ./frontend
           file: ./docker/nextjs/prod/Dockerfile
           push: true
           tags: |
@@ -53,7 +67,7 @@ jobs:
       - name: Build & Push Nginx Image
         uses: docker/build-push-action@v5
         with:
-          context: ./docker/nginx/prod
+          context: .
           file: ./docker/nginx/prod/Dockerfile
           push: true
           tags: |
