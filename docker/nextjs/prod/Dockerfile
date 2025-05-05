@@ -8,6 +8,8 @@ RUN npm install --omit=dev
 
 COPY . .
 
+RUN npm run build
+
 FROM node:18
 
 WORKDIR /app
