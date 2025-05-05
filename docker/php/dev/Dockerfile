@@ -23,14 +23,6 @@ WORKDIR /var/www/backend
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-COPY . .
-
 RUN composer install
 
-RUN chown -R www-data:www-data /var/www/backend \
-    && find /var/www/backend -type d -exec chmod 755 {} \; \
-    && find /var/www/backend -type f -exec chmod 644 {} \;
-
 CMD ["php-fpm"]
-
-EXPOSE 9000
