@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          file: ./docker/php/prod/Dockerfile
+          file: ../infrastructure/docker/php/prod/Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/php:prod
@@ -57,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          file: ./docker/nextjs/prod/Dockerfile
+          file: ../infrastructure/docker/nextjs/prod/Dockerfile
           push: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/nextjs:prod
