@@ -42,6 +42,20 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Check Required Secrets
+        run: |
+          test -n "${{ secrets.GITHUB_TOKEN }}" || (echo "Missing GITHUB_TOKEN" && exit 1)
+
+      - name: Validate Docker Compose Config
+        run: docker compose -f compose/prod/docker-compose.yaml config
+
+      - name: Security Scan PHP Image
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          image-ref: ghcr.io/tsundoku-group/php:prod
+          format: table
+          severity: HIGH,CRITICAL
+
       - name: Build & Push PHP Image
         uses: docker/build-push-action@v5
         with:
