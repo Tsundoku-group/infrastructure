@@ -31,10 +31,14 @@ infrastructure/
 ├── kubernetes/               # Manifests Kubernetes
 │   ├── backend/
 │   ├── frontend/
-│   ├── postgres/
-│   ├── redis/
-│   ├── mongodb/
-│   └── secrets/              # Secrets et ConfigMaps simulés
+│   └── bdd/                  
+│   │   ├── postgres/
+│   │   ├── redis/
+│   │   └── mongodb/
+│   ├── nginx/
+│   └── monitoring/
+│       ├── grafana/
+│       └── prometheus/              
 ├── .github/
 │   └── workflows/            # CI/CD centralisée
 │       ├── docker-build.yaml
