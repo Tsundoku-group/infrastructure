@@ -33,7 +33,6 @@ services:
       context: ../../../frontend
       dockerfile: ../infrastructure/docker/nextjs/dev/Dockerfile
     container_name: nextjs-dev
-    platform: linux/amd64
     volumes:
       - ../../../frontend:/app
     networks:
