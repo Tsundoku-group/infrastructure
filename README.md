@@ -13,6 +13,7 @@ Ce répertoire centralise toute la logique d'infrastructure du projet **Tsundoku
 5. [Scans de sécurité](#scans-de-sécurité)
 6. [Releases GitHub](#releases-github)
 7. [Tags et versionning](#tags-et-versionning)
+8. [Kubernetes](#kubernetes)
 
 ---
 
@@ -27,6 +28,13 @@ infrastructure/
 │   ├── php/
 │   ├── nextjs/
 │   └── nginx/
+├── kubernetes/               # Manifests Kubernetes
+│   ├── backend/
+│   ├── frontend/
+│   ├── postgres/
+│   ├── redis/
+│   ├── mongodb/
+│   └── secrets/              # Secrets et ConfigMaps simulés
 ├── .github/
 │   └── workflows/            # CI/CD centralisée
 │       ├── docker-build.yaml
@@ -94,3 +102,21 @@ Un fichier release est généré automatiquement avec :
 * Format utilisé : `v1.0.0`
 * Triggers : une **release GitHub** + les tags `php:v1.0.0`, `nextjs:v1.0.0`, etc.
 
+--- 
+
+## Kubernetes
+
+
+*	Déploiements et Services :
+       *	backend, frontend, postgres, mongodb, redis 
+* Secrets Kubernetes :
+  *	Configuration des identifiants (username, password, etc.)
+    *	ConfigMaps :
+         *	Variables d’environnement spécifiques aux services
+         *	Dossiers séparés par stack pour la lisibilité (kubernetes/backend/, .../secrets/, etc.)
+
+Ces fichiers peuvent être appliqués avec :
+
+```bash 
+  kubectl apply -f kubernetes/
+```
