@@ -1,7 +1,7 @@
 #> ========== CONFIG ==========
 ENV_FILE=./.env
 COMPOSE=docker compose
-COMPOSE_DEV_FILES=-f ./compose/dev/docker-compose.yaml -f ./compose/dev/docker-compose.override.yaml
+COMPOSE_DEV_FILES=-f ./compose/dev/docker-compose.yaml -f ./compose/dev/docker-compose.override.yaml -f ./compose/dev/sonarqube/docker-compose.yaml
 
 PHP_SERVICE=php
 NEXTJS_SERVICE=nextjs
