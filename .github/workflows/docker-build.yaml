@@ -63,14 +63,3 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/nextjs:prod
             ${{ env.IMAGE_PREFIX }}/nextjs:${{ github.sha }}
             ${{ env.IMAGE_PREFIX }}/nextjs:${{ env.DATE_TAG }}
-
-      - name: Build & Push Nginx Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./infrastructure/docker/nginx/prod/conf.d/default.conf
-          push: true
-          tags: |
-            ${{ env.IMAGE_PREFIX }}/nginx:prod
-            ${{ env.IMAGE_PREFIX }}/nginx:${{ github.sha }}
-            ${{ env.IMAGE_PREFIX }}/nginx:${{ env.DATE_TAG }}
