@@ -66,6 +66,8 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/php:prod
             ${{ env.IMAGE_PREFIX }}/php:${{ github.sha }}
             ${{ env.IMAGE_PREFIX }}/php:${{ env.DATE_TAG }}
+          cache-from: type=registry,ref=${{ env.IMAGE_PREFIX }}/php:prod
+          cache-to: type=inline
 
       - name: Build & Push Next.js Image
         uses: docker/build-push-action@v5
@@ -77,3 +79,5 @@ jobs:
             ${{ env.IMAGE_PREFIX }}/nextjs:prod
             ${{ env.IMAGE_PREFIX }}/nextjs:${{ github.sha }}
             ${{ env.IMAGE_PREFIX }}/nextjs:${{ env.DATE_TAG }}
+          cache-from: type=registry,ref=${{ env.IMAGE_PREFIX }}/nextjs:prod
+          cache-to: type=inline
