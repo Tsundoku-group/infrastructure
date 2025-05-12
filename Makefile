@@ -72,15 +72,6 @@ composer-dumpautoload: ## Régénérer le fichier autoload
 
 
 #> ========== SYMFONY ==========
-make-entity: ## Crée une entité Symfony
-	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console make:entity $(entity)
-
-make-migration: ## Crée une migration Doctrine
-	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console make:migration
-
-migrate: ## Exécute les migrations Doctrine
-	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:migrations:migrate --no-interaction
-
 cache-clear: ## Vide le cache Symfony
 	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console cache:clear
 
@@ -96,9 +87,6 @@ debug-autowiring: ## Lister les services disponibles pour l'autowiring
 
 
 #> ========== DOCTRINE ==========
-create-database: ## Crée la BDD si inexistante
-	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:database:create --if-not-exists
-
 create-database: ## Créer la base de données si elle n'existe pas
 	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(PHP_SERVICE) php bin/console doctrine:database:create --if-not-exists
 
@@ -204,12 +192,3 @@ test-watch: ## Lancer les tests en mode "watch"
 format: ## Formater le code avec Prettier
 	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(NEXTJS_SERVICE) npm run format
 #< ========== NEXTJS ==========
-
-
-#> ========== KUBERNETES ==========
-kube-apply: ## Applique tous les fichiers kube
-	kubectl apply -f kubernetes/
-
-kube-pods: ## Liste les pods en cours
-	kubectl get pods -A
-#< ========== KUBERNETES ==========
