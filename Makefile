@@ -192,3 +192,43 @@ test-watch: ## Lancer les tests en mode "watch"
 format: ## Formater le code avec Prettier
 	$(COMPOSE) --env-file $(ENV_FILE) $(COMPOSE_DEV_FILES) exec $(NEXTJS_SERVICE) npm run format
 #< ========== NEXTJS ==========
+
+
+#> ========== KUBERNETES ==========
+kube-apply: ## Applique tous les fichiers Kubernetes
+	kubectl apply -f kubernetes/
+
+kube-delete: ## Supprime tous les fichiers Kubernetes
+	kubectl delete -f kubernetes/
+#< ========== KUBERNETES ==========
+
+
+#> ========== KUBERNETES - MONITORING ==========
+kube-prometheus-apply: ## Applique les ressources Prometheus
+	kubectl apply -f kubernetes/prometheus/
+
+kube-prometheus-delete: ## Supprime les ressources Prometheus
+	kubectl delete -f kubernetes/prometheus/
+
+kube-grafana-apply: ## Applique les ressources Grafana
+	kubectl apply -f kubernetes/grafana/
+
+kube-grafana-delete: ## Supprime les ressources Grafana
+	kubectl delete -f kubernetes/grafana/
+
+kube-monitoring-apply: ## Applique Prometheus + Grafana
+	$(MAKE) kube-prometheus-apply
+	$(MAKE) kube-grafana-apply
+
+kube-monitoring-delete: ## Supprime Prometheus + Grafana
+	$(MAKE) kube-prometheus-delete
+	$(MAKE) kube-grafana-delete
+
+kube-all-apply: ## Applique toutes les ressources + monitoring
+	$(MAKE) kube-apply
+	$(MAKE) kube-monitoring-apply
+
+kube-all-delete: ## Supprime toutes les ressources + monitoring
+	$(MAKE) kube-monitoring-delete
+	$(MAKE) kube-delete
+#< ========== KUBERNETES - MONITORING ==========
