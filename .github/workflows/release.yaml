@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_PREFIX: ghcr.io/tsundoku-group
+
+    steps:
+      - name: Checkout infrastructure
+        uses: actions/checkout@v3
+
+      - name: Set Docker image tags
+        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Generate release notes with Docker image tags
+        id: generate-notes
+        run: |
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          echo "📦 Docker Images for this release:" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "- PHP: \`${{ env.IMAGE_PREFIX }}/php:${{ env.RELEASE_TAG }}\`" >> $GITHUB_ENV
+          echo "- Next.js: \`${{ env.IMAGE_PREFIX }}/nextjs:${{ env.RELEASE_TAG }}\`" >> $GITHUB_ENV
+          echo "- Nginx: \`${{ env.IMAGE_PREFIX }}/nginx:${{ env.RELEASE_TAG }}\`" >> $GITHUB_ENV
+          echo "" >> $GITHUB_ENV
+          echo "🔐 Built from commit: \`${{ github.sha }}\`" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
+          body: ${{ env.RELEASE_BODY }}
